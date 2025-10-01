@@ -1,0 +1,78 @@
+body {
+	font-family: 'Segoe UI', Arial, sans-serif;
+	background: #f7f8fa;
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	max-width: 600px;
+	margin: 40px auto;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+	padding: 32px 24px;
+}
+
+header {
+	text-align: center;
+	margin-bottom: 24px;
+}
+
+header h1 {
+	margin: 0 0 8px 0;
+	font-size: 2rem;
+	color: #2d3748;
+}
+
+header p {
+	color: #718096;
+	margin: 0;
+}
+
+.toggle-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	margin-bottom: 24px;
+}
+
+.toggle-buttons button {
+	padding: 10px 24px;
+	border: none;
+	border-radius: 6px;
+	background: #e2e8f0;
+	color: #2d3748;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background 0.2s, color 0.2s;
+}
+
+.toggle-buttons button.active {
+	background: #3182ce;
+	color: #fff;
+}
+
+.services-list {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.service-card {
+	background: #f1f5f9;
+	border-radius: 8px;
+	padding: 18px 16px;
+	box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.service-card h3 {
+	margin: 0 0 6px 0;
+	color: #2b6cb0;
+	font-size: 1.15rem;
+}
+
+.service-card p {
+	margin: 0;
+	color: #4a5568;
+}
