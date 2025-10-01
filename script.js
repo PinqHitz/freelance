@@ -1,42 +1,4 @@
-
-// Demo data: categories with optional subcategories and listings
-const categories = [
-	{
-		name: "Web Development",
-		subcategories: [
-			{
-				name: "Frontend",
-				listings: [
-				]
-			},
-			{
-				name: "Backend",
-				listings: [
-				]
-			}
-		]
-	},
-	{
-		name: "Graphic Design",
-		subcategories: [
-			{
-				name: "Logo Design",
-				listings: [
-				]
-			},
-			{
-				name: "Illustration",
-				listings: [
-				]
-			}
-		]
-	},
-	{
-		name: "SEO Optimization",
-		listings: [
-		]
-	}
-];
+const categories = []; 
 
 // User's own services
 let myServices = [];
@@ -66,9 +28,10 @@ function renderCategoryBlocks() {
 
 // Render listings for a category (and subcategories if present)
 function renderCategoryDetails(category) {
-	let html = `<button class="back-btn">← Back to Categories</button>`;
+	let html = `<button class="back-btn">← Tilbake til kategorier</button>`;
 	html += `<h2>${category.name}</h2>`;
-	if (category.subcategories) {
+	// Show subcategories if present
+	if (category.subcategories && category.subcategories.length > 0) {
 		html += `<div class="subcategory-blocks">
 			${category.subcategories.map((sub, subIdx) => `
 				<div class="subcategory-card" data-subidx="${subIdx}">
@@ -76,14 +39,16 @@ function renderCategoryDetails(category) {
 				</div>
 			`).join('')}
 		</div>`;
-		html += `<div class="subcategory-listings"></div>`;
-	} else if (category.listings) {
+	}
+	// Show listings for the category itself (not subcategories)
+	if (category.listings && category.listings.length > 0) {
 		html += `<div class="services-list">
 			${category.listings.map(listing => `
 				<div class="service-card">
 					<h3>${listing.title}</h3>
 					<p>${listing.description}</p>
-					<span class="service-person">Offered by: ${listing.name}</span>
+					<p>Pris: $${listing.price}</p>
+					<span class="service-person">Service av: ${listing.name}</span>
 				</div>
 			`).join('')}
 		</div>`;
@@ -94,7 +59,7 @@ function renderCategoryDetails(category) {
 	document.querySelector('.back-btn').addEventListener('click', renderCategoryBlocks);
 
 	// Subcategory click
-	if (category.subcategories) {
+	if (category.subcategories && category.subcategories.length > 0) {
 		document.querySelectorAll('.subcategory-card').forEach(card => {
 			card.addEventListener('click', function() {
 				const subIdx = this.getAttribute('data-subidx');
@@ -105,17 +70,22 @@ function renderCategoryDetails(category) {
 }
 
 function renderSubcategoryListings(category, subcategory) {
-	let html = `<button class="back-btn">← Back to ${category.name}</button>`;
+	let html = `<button class="back-btn">← Tilbake til ${category.name}</button>`;
 	html += `<h3>${subcategory.name}</h3>`;
-	html += `<div class="services-list">
-		${subcategory.listings.map(listing => `
-			<div class="service-card">
-				<h3>${listing.title}</h3>
-				<p>${listing.description}</p>
-				<span class="service-person">Offered by: ${listing.name}</span>
-			</div>
-		`).join('')}
-	</div>`;
+	if (subcategory.listings && subcategory.listings.length > 0) {
+		html += `<div class="services-list">
+			${subcategory.listings.map(listing => `
+				<div class="service-card">
+					<h3>${listing.title}</h3>
+					<p>${listing.description}</p>
+					<p>Pris: $${listing.price}</p>
+					<span class="service-person">Service av: ${listing.name}</span>
+				</div>
+			`).join('')}
+		</div>`;
+	} else {
+		html += `<p>Ingen oppføringer i denne kategorien, beklager.</p>`;
+	}
 	viewContent.innerHTML = html;
 	document.querySelector('.back-btn').addEventListener('click', () => renderCategoryDetails(category));
 }
@@ -125,37 +95,37 @@ function renderMyServices() {
 	// Build category/subcategory dropdown
 	let categoryOptions = '';
 	categories.forEach((cat, catIdx) => {
-		if (cat.subcategories) {
+		if (cat.subcategories && cat.subcategories.length > 0) {
 			cat.subcategories.forEach((sub, subIdx) => {
 				categoryOptions += `<option value="${catIdx}|${subIdx}">${cat.name} > ${sub.name}</option>`;
 			});
-		} else {
-			categoryOptions += `<option value="${catIdx}">${cat.name}</option>`;
 		}
+		// Always allow selecting the category itself
+		categoryOptions += `<option value="${catIdx}">${cat.name}</option>`;
 	});
 
 	viewContent.innerHTML = `
 		<div class="my-services-tools">
-			<h2>Post a New Service</h2>
+			<h2>Post en ny service</h2>
 			<form id="serviceForm">
-				<input type="text" id="myName" placeholder="Your Name" required />
-				<input type="text" id="myTitle" placeholder="Service Title" required />
-				<textarea id="myDescription" placeholder="Service Description" required></textarea>
-				<input type="number" id="myPrice" placeholder="Price" min="0" step="any" required />
+				<input type="text" id="myName" placeholder="Ditt navn" required />
+				<input type="text" id="myTitle" placeholder="Service Tittel" required />
+				<textarea id="myDescription" placeholder="Service forklaring" required></textarea>
+				<input type="number" id="myPrice" placeholder="Pris" min="0" step="any" required />
 				<select id="myCategory" required>
-					<option value="" disabled selected>Select Category & Subcategory</option>
+					<option value="" disabled selected>Velg kategori</option>
 					${categoryOptions}
 				</select>
-				<button type="submit">Add Service</button>
+				<button type="submit">Legg til Service</button>
 			</form>
-			<h2>Your Listings</h2>
+			<h2>DIne oppføringer</h2>
 			<div class="services-list">
-				${myServices.length === 0 ? '<p>No listings yet.</p>' : myServices.map(s => `
+				${myServices.length === 0 ? '<p>Ingen oppføring, beklager.</p>' : myServices.map(s => `
 					<div class="service-card">
 						<h3>${s.title}</h3>
 						<p>${s.description}</p>
 						<p>Price: $${s.price}</p>
-						<span class="service-person">${s.categoryLabel} | By: ${s.name}</span>
+						<span class="service-person">${s.categoryLabel} | Av: ${s.name}</span>
 					</div>
 				`).join('')}
 			</div>
@@ -211,19 +181,19 @@ function renderAdminView() {
 	let html = `<div class="admin-view">
 		<h2>Admin Panel</h2>
 		<div class="admin-categories">
-			<h3>Categories & Subcategories</h3>
+			<h3>Kategorier og underkategorier</h3>
 			<ul>
 				${categories.map((cat, catIdx) => `
 					<li>
 						<strong>${cat.name}</strong>
-						<button class="edit-cat" data-idx="${catIdx}">Edit</button>
-						<button class="delete-cat" data-idx="${catIdx}">Delete</button>
+						<button class="edit-cat" data-idx="${catIdx}">Endre</button>
+						<button class="delete-cat" data-idx="${catIdx}">Slett</button>
 						${cat.subcategories ? `<ul>
 							${cat.subcategories.map((sub, subIdx) => `
 								<li>
 									${sub.name}
-									<button class="edit-subcat" data-catidx="${catIdx}" data-subidx="${subIdx}">Edit</button>
-									<button class="delete-subcat" data-catidx="${catIdx}" data-subidx="${subIdx}">Delete</button>
+									<button class="edit-subcat" data-catidx="${catIdx}" data-subidx="${subIdx}">Endre</button>
+									<button class="delete-subcat" data-catidx="${catIdx}" data-subidx="${subIdx}">Slett</button>
 								</li>
 							`).join('')}
 						</ul>` : ''}
@@ -232,19 +202,19 @@ function renderAdminView() {
 			</ul>
 		</div>
 		<div class="admin-add">
-			<h3>Add Category</h3>
+			<h3>Legg til kategori</h3>
 			<form id="addCategoryForm">
-				<input type="text" id="newCategoryName" placeholder="Category Name" required />
-				<button type="submit">Add Category</button>
+				<input type="text" id="newCategoryName" placeholder="Navn på kategori" required />
+				<button type="submit">Legg til kategori</button>
 			</form>
-			<h3>Add Subcategory</h3>
+			<h3>Legg til underkategori</h3>
 			<form id="addSubcategoryForm">
 				<select id="parentCategorySelect" required>
-					<option value="" disabled selected>Select Category</option>
+					<option value="" disabled selected>Velg kategori</option>
 					${categories.map((cat, idx) => `<option value="${idx}">${cat.name}</option>`).join('')}
 				</select>
-				<input type="text" id="newSubcategoryName" placeholder="Subcategory Name" required />
-				<button type="submit">Add Subcategory</button>
+				<input type="text" id="newSubcategoryName" placeholder="Navn på underkategori" required />
+				<button type="submit">Legg til underkategori</button>
 			</form>
 		</div>
 		<button class="back-btn" style="margin-top:24px;">← Back</button>
