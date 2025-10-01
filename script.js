@@ -84,7 +84,7 @@ function renderSubcategoryListings(category, subcategory) {
 			`).join('')}
 		</div>`;
 	} else {
-		html += `<p>Ingen oppføringer i denne kategorien, beklager.</p>`;
+		html += `<p>Ingen opføringer i denne kategorien, beklager.</p>`;
 	}
 	viewContent.innerHTML = html;
 	document.querySelector('.back-btn').addEventListener('click', () => renderCategoryDetails(category));
